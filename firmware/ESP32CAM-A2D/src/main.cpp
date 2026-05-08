@@ -8,7 +8,7 @@
 // ─── Credenciais ─────────────────────────────────────────────────────────────
 static const char* WIFI_SSID   = "SecurityWifi"; // SEU SSID
 static const char* WIFI_PASS   = "123456789";    // SUA SENHA
-static const char* MQTT_HOST   = "ec2-23-20-167-220.compute-1.amazonaws.com"; // SEU BROKER
+static const char* MQTT_HOST   = "IP"; // BROKER
 static const int   MQTT_PORT   = 8883; // SUA PORTA 883 para Tls e 1883 para não-TLS
 static const char* MQTT_CLIENT = "espcam_01"; // SEU CLIENT ID
 static const char* MQTT_TOPIC  = "sensores/camera"; 

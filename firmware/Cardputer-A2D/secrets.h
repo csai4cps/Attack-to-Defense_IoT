@@ -6,7 +6,7 @@
 #define WIFI_PASSWORD "123456789" //   SUA SENHA
 
 // ─── MQTT / Broker ────────────────────────────────────────────────────────────
-#define MQTT_HOST   "ec2-23-20-167-220.compute-1.amazonaws.com" // SEU BROKER
+#define MQTT_HOST   "IP" // BROKER
 #define MQTT_PORT   8883 // SUA PORTA 883 para Tls e 1883 para não-TLS
 #define MQTT_CLIENT "cardputer_01" // SEU CLIENT ID
 

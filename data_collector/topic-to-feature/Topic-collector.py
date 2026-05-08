@@ -12,9 +12,9 @@ TOPIC_CARD     = os.getenv("TOPIC_CARD", "iot/card")
 TOPIC_CAMERA   = os.getenv("TOPIC_CAMERA", "sensores/camera")
 IAT_THRESHOLD  = float(os.getenv("IAT_THRESHOLD", "0.5"))
 
-CA_CERT        = "/certs/ca.crt"
-CLIENT_CERT    = "/certs/clients/kali.crt"
-CLIENT_KEY     = "/certs/clients/kali.key"
+CA_CERT        = "/caminho/ca.crt"        # CA do broker
+CLIENT_CERT    = "/caminho/seu_cert.crt"  # cert do cliente
+CLIENT_KEY     = "/caminho/sua_chave.key"   # chave privada do cliente
 
 DATASET_DIR    = "dataset"
 os.makedirs(DATASET_DIR, exist_ok=True)
