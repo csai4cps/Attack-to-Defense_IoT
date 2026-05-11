@@ -1,0 +1,71 @@
+services:
+
+  cert-gen:
+    image: alpine/openssl:latest
+    container_name: cert-gen
+    volumes:
+      - ./certs:/certs
+      - ./scripts/gen-certs.sh:/gen-certs.sh
+    entrypoint: ["/bin/sh", "/gen-certs.sh"]
+    restart: "no"
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    depends_on:
+      cert-gen:
+        condition: service_completed_successfully
+    ports:
+      - "8883:8883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./certs:/mosquitto/certs:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-h", "localhost", "-p", "8883",
+             "--cafile", "/mosquitto/certs/ca.crt",
+             "--cert",   "/mosquitto/certs/clients/kali.crt",
+             "--key",    "/mosquitto/certs/clients/kali.key",
+             "-t", "$$SYS/#", "-C", "1", "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  collector:
+    image: python:3.12-slim
+    container_name: mqtt-collector
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    volumes:
+      - ./certs:/certs:ro
+      - ./scripts/collector.py:/app/collector.py
+      - ./dataset:/app/dataset
+    working_dir: /app
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "8883"
+      TOPIC_CARD: "iot/card"
+      TOPIC_CAMERA: "sensores/camera"
+      IAT_THRESHOLD: "0.5"
+    command: >
+      bash -c "pip install paho-mqtt --quiet &&
+               python collector.py"
+    restart: unless-stopped
+
+  trainer:
+    image: python:3.12-slim
+    container_name: ml-trainer
+    volumes:
+      - ./scripts/train.py:/app/train.py
+      - ./dataset:/app/dataset
+      - ./results:/app/results
+    working_dir: /app
+    profiles: ["train"]
+    command: >
+      bash -c "pip install pandas scikit-learn matplotlib seaborn --quiet &&
+               python train.py"
+
+networks:
+  default:
+    name: iot-lab
