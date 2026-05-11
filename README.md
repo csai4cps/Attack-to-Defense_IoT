@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # A2D-IoT — Ambiente Experimental de Segurança para IoT
 
 > Plataforma física e reprodutível para geração de datasets rotulados e detecção de ataques em ambientes IoT com Machine Learning.
